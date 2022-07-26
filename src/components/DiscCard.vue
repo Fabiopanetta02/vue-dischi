@@ -25,7 +25,6 @@ export default {
     background-color: $bg_disc;
     height: 400px;
 
-
     img{
         width: 190px;
         height: 190px
