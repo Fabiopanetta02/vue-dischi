@@ -2,8 +2,9 @@
   <main>
     <div class="container">
       <div class="discs-list row">
-        <div class="col" v-for="disc in discs" :key="disc.title">
-          <DiscCard :title="disc.title" :image="disc.poster" :author="disc.author" :year="disc.year"/>
+        <div class="col" v-for="(disc, i) in filteredDiscs" :key="i">
+          <DiscCard 
+          :datas="disc"/>
         </div>
       </div>
     </div>
@@ -13,19 +14,49 @@
 <script>
 import axios from 'axios';
 import DiscCard from './DiscCard.vue';
+import {eventBus} from '../main.js';
+
 export default {
     name: "DiscSection",
-    components: { DiscCard },
+    components: { 
+      DiscCard 
+    },
     data() {
-        return {
-            discs: []
+        return { 
+            apiUrl: 'https://flynn.boolean.careers/exercises/api/array/music',
+            discs: [],
+            test: [],
+            loading: true,
+            selectedGenre: 'All'
         };
     },
-    mounted() {
-        axios.get("https://flynn.boolean.careers/exercises/api/array/music").then((res) => {
-            this.discs = res.data.response;
-        });
+    created(){
+          this.getDiscs(); 
+          eventBus.$on('filters', el =>{
+              this.selectedGenre = el;
+          });     
     },
+    computed:{
+    filteredDiscs(){
+        if(this.selectedGenre == 'All'){
+          return this.discs;
+        }
+        return this.discs.filter(disc => disc.genre == this.selectedGenre);
+    }
+  },
+  methods:{
+      getDiscs(){
+        axios
+        .get(this.apiUrl)
+        .then (response =>{
+          this.discs = response.data.response;
+          this.loading = false;
+          this.selectedGenre = 'All';
+          eventBus.$emit('selectGenre', this.discs);
+        })
+        .catch(err => console.log(err));
+      }
+  }
 }
 </script>
 

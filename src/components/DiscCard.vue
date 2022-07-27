@@ -1,21 +1,16 @@
 <template>
   <div class="disc-card text-center p-4 mb-5">
-    <img :src="image" :alt="title" class="mb-3">
-    <h4 class="mb-3">{{title.toUpperCase()}}</h4>
-    <div class="author">{{author}}</div>
-    <div class="year">{{year}}</div>
+    <img :src="datas.poster" :alt="datas.title" class="mb-3">
+    <h4 class="mb-3">{{datas.title.toUpperCase()}}</h4>
+    <div class="author">{{datas.author}}</div>
+    <div class="year">{{datas.year}}</div>
   </div>
 </template>
 
 <script>
 export default {
     name: 'DiscCard',
-    props: {
-        title: String,
-        image: String,
-        author: String,
-        year: String
-    }
+    props: ["datas"]
 }
 </script>
 
